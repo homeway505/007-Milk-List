@@ -27,10 +27,10 @@ def process_excel(excel_data):
 # Initialize the Function App with anonymous authentication
 app = func.FunctionApp()
 
-@app.function_name("HttpTrigger")
-@app.route(route="process_excel", auth_level=func.AuthLevel.ANONYMOUS)
+@app.function_name("milk_list")
+@app.route(route="http_trigger", auth_level=func.AuthLevel.ANONYMOUS)
 
-def HttpTrigger(req: func.HttpRequest) -> func.HttpResponse:
+def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
 
     try:
         # Attempt to retrieve file content from the request parameter or body
@@ -83,3 +83,25 @@ def BlobTrigger(myblob: func.InputStream):
     excel_data = BytesIO(myblob.read())
 
     df_json = process_excel(excel_data)
+
+
+# @app.route(route="http_trigger2", auth_level=func.AuthLevel.FUNCTION)
+# def http_trigger2(req: func.HttpRequest) -> func.HttpResponse:
+#     logging.info('Python HTTP trigger function processed a request.')
+
+#     name = req.params.get('name')
+#     if not name:
+#         try:
+#             req_body = req.get_json()
+#         except ValueError:
+#             pass
+#         else:
+#             name = req_body.get('name')
+
+#     if name:
+#         return func.HttpResponse(f"Hello, {name}. This HTTP triggered function executed successfully.")
+#     else:
+#         return func.HttpResponse(
+#              "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
+#              status_code=200
+#         )
