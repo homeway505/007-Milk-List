@@ -29,7 +29,7 @@ app = func.FunctionApp()
 
 @app.function_name("milk_list")
 
-@app.route(route="http_trigger", auth_level=func.AuthLevel.ANONYMOUS)
+@app.route(route="http_trigger", auth_level=func.AuthLevel.FUNCTION)
 def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
     try:
         # Attempt to retrieve file content from the request parameter or body
