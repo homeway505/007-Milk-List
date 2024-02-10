@@ -11,13 +11,13 @@ def process_excel(excel_data):
 
     # Data processing steps
     df.dropna(how='all', inplace=True)  # Remove rows where both A and C are NaN
-    df = df.fillna(method='ffill')  # Fill NaN in A from the previous row if C is not NaN
+    df = df.ffill()  # Fill NaN in A from the previous row if C is not NaN
     df = df.drop_duplicates(subset=df.columns[1])  # Remove duplicates based on column C
     df = df.dropna(subset=[df.columns[1]])  # Drop rows where column C is NaN
     df = df.reset_index(drop=True)  # Reset index
 
-    logging.info(df)
-    print(df)
+    # logging.info(df)
+    # print(df)
 
     # Convert DataFrame to JSON string
     df_json = df.to_json(orient="records")
@@ -28,9 +28,9 @@ def process_excel(excel_data):
 app = func.FunctionApp()
 
 @app.function_name("milk_list")
+
 @app.route(route="http_trigger", auth_level=func.AuthLevel.ANONYMOUS)
 def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
-
     try:
         # Attempt to retrieve file content from the request parameter or body
         file_content_encoded = req.params.get('FileContent')
@@ -50,7 +50,7 @@ def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
                 status_code=400
             )
 
-        logging.info('Processing an Excel file.')
+        logging.debug('Processing an Excel file.')
 
         # Decode the base64 file content to binary
         file_content = base64.b64decode(file_content_encoded)
@@ -71,8 +71,7 @@ def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
         )
 
 
-@app.blob_trigger(arg_name="myblob", path="daily-file",
-                               connection="milklist_STORAGE") 
+@app.blob_trigger(arg_name="myblob", path="daily-file", connection="milklist_STORAGE") 
 def BlobTrigger(myblob: func.InputStream):
     logging.info(f"Python blob trigger function processed blob"
                 f"Name: {myblob.name}"
