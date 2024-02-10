@@ -29,7 +29,6 @@ app = func.FunctionApp()
 
 @app.function_name("milk_list")
 @app.route(route="http_trigger", auth_level=func.AuthLevel.ANONYMOUS)
-
 def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
 
     try:
